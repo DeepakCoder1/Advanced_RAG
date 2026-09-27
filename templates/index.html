@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>PDF RAG Assistant</title>
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background: #f5f5f5;
+
+            margin: 0;
+
+            padding: 40px;
+
+        }
+
+
+        .container {
+
+            max-width: 900px;
+
+            margin: auto;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+        }
+
+
+        .section {
+
+            margin-top: 30px;
+
+            padding: 20px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+        }
+
+
+        input[type="file"] {
+
+            margin: 10px 0;
+
+        }
+
+
+        input[type="text"] {
+
+            width: 70%;
+
+            padding: 12px;
+
+            font-size: 16px;
+
+        }
+
+
+        button {
+
+            padding: 12px 20px;
+
+            background: #222;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+        }
+
+
+        button:hover {
+
+            background: #444;
+
+        }
+
+
+        .success {
+
+            background: #e8f5e9;
+
+            padding: 12px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .error {
+
+            background: #ffebee;
+
+            padding: 12px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .answer {
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            background: #f1f1f1;
+
+            border-radius: 8px;
+
+            white-space: pre-wrap;
+
+        }
+
+
+        .sources {
+
+            margin-top: 20px;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>📚 PDF RAG Assistant</h1>
+
+
+    <!-- Upload Section -->
+
+    <div class="section">
+
+        <h2>Upload PDF</h2>
+
+
+        <form
+            action="/upload"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input
+                type="file"
+                name="pdf"
+                accept=".pdf"
+                required
+            >
+
+
+            <br>
+
+
+            <button type="submit">
+                Upload & Process
+            </button>
+
+        </form>
+
+
+        {% if success %}
+
+        <div class="success">
+
+            {{ success }}
+
+        </div>
+
+        {% endif %}
+
+
+        {% if error %}
+
+        <div class="error">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- Question Section -->
+
+    <div class="section">
+
+        <h2>Ask Question</h2>
+
+
+        <form
+            action="/ask"
+            method="POST"
+        >
+
+            <input
+                type="text"
+                name="question"
+                placeholder="Ask something about your PDF..."
+                value="{{ question or '' }}"
+                required
+            >
+
+
+            <button type="submit">
+                Ask
+            </button>
+
+        </form>
+
+
+        {% if answer %}
+
+        <div class="answer">
+
+            <h3>Answer</h3>
+
+            {{ answer }}
+
+        </div>
+
+
+        <div class="sources">
+
+            <h3>Sources</h3>
+
+
+            {% for source in sources %}
+
+                <p>
+                    📄 {{ source.filename }}
+                    — Chunk {{ source.chunk_id }}
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
